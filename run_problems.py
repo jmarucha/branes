@@ -1,80 +1,64 @@
 #!/usr/bin/python
 import os  # os module allows to determine directories
 import subprocess
+from config_parser import config
 
-
-numberNodes         = '2'    # choose the number of nodes for a single sdpb job
-precision           = '1024' # binary precision
-dualityGapThreshold = '1e-7'
-
-
-sdpbParams = "--procsPerNode=28 --writeSolution y --maxIterations 700 \
---maxComplementarity %s --dualityGapThreshold %s --precision %s" % ('1e60', dualityGapThreshold, precision)
-
-
+sdpb_params = """\
+--procsPerNode={processes_per_node}
+--writeSolution y
+--maxIterations {max_iterations}
+--maxComplementarity {max_complementarity}
+--dualityGapThreshold {duality_gap_threshold}
+--precision {precision}""".format(**config['sdpb']).replace('\n', ' ')
 # determine working directory
 directory   = os.path.dirname(os.path.realpath(__file__))
 problemsDir = os.path.join(directory, 'problems')
 
 
-# specify the *_in names to be studied
-# select all the *_in files in storage directory
-fileNames = []
-for name in os.listdir(problemsDir):
-    if name.endswith("_in"):
-        fileNames.append(name)
+
+fileNames = [name[:-3] for name in os.listdir(config['directories']['input']) if name.endswith("_in")]
 fileNames.sort()
-# select only specific files in storage directory
-#filenames = [os.path.join(problemsDir, 'name1_in'), os.path.join(problemsDir, 'name2_in')]
 
+exit(1)
 
-text1 = "\
-#!/bin/bash\n\
-#SBATCH --chdir=%s\n\
-#SBATCH --nodes=%s\n\
-#SBATCH --ntasks-per-node=28\n\
-#SBATCH --mem=0\n\
-#SBATCH --time=12:00:00\n\
-#SBATCH --account=fsl\n\n" % (problemsDir,numberNodes)
+job_template = """#!/bin/bash
+#SBATCH --chdir={sdpb_dir}
+#SBATCH --nodes={nodes_per_job}
+#SBATCH --ntasks-per-node={processes_per_node}
+#SBATCH --mem=0
+#SBATCH --time=12:00:00
+#SBATCH --account=fsl
+#-------------------- actual job: start------------
+echo starting the job: `date`
+echo Tasks $SLURM_NTASKS
+srun ./sdpb -s {input} -o {output} {sdpb_params}
+echo ending the job: `date`
+#-------------------- actual job: end------------
+"""
 
-
-text2 = "\
-#-------------------- actual job: start------------\n\
-echo starting the job: `date`\n\
-echo Tasks $SLURM_NTASKS\n\
-srun ./sdpb -s %s -o %s " + sdpbParams + "\n\
-echo ending the job: `date`\n\
-#-------------------- actual job: end------------\n"
-    
-
-for mathName in fileNames:
-    inName     = mathName
-    outName    = mathName[0:-3] + '_out'
-    text       = text1 + (text2 % (inName, outName))
-    sbatchName = 'sbatch_' + mathName[0:-3] + '.run'
-    sbatchName = os.path.join(problemsDir, sbatchName)
-    file       = open(sbatchName, "w") 
+for name in fileNames:
+    inName     = name + '_in'
+    outName    = name +'_out'
+    text       = job_template.format(
+        sdpb_dir = config['directories']['sdpb'],
+        nodes_per_job = config['sdpb']['nodes_per_job'],
+        processes_per_node = config['sdpb']['processes_per_node'],
+        input = config['directories']['input'],
+        output = config['directories']['output'],
+        sdpb_params = sdpb_params,
+    )
+    sbatch_name = os.path.join(config['directories']['sdpb'], 'sbatch_' + name + '.run')
+    file = open(sbatch_name, "w") 
     file.write(text) 
     file.close() 
-    subprocess.call(['chmod','+x', sbatchName])
+    subprocess.call(['chmod','+x', sbatch_name])
 
+    if config['debug']['use_debug_partition']:
+        command = ['sbatch', sbatch_name, '--partition', 'debug']
+    else:
+        command = ['sbatch', sbatch_name]
 
-# names of files and folders in the directory
-fileNames = []
-for name in os.listdir(problemsDir):
-    if name.endswith(".run"):
-        fileNames.append(os.path.join(problemsDir,name))
-fileNames.sort()
-
-
-# sbatch tasks
-for name in fileNames:
-    command = ['sbatch', name]
-    subprocess.call(command)
-
-
-
-
-
-
-
+    if not config['debug']['dry']:
+        subprocess.call(command)
+    else:
+        print("MOCK RUN ",' '.join(command))

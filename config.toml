@@ -1,0 +1,31 @@
+[directories]
+spherical_integrals = "sample_points/data"
+input = "problems"
+output = "problems"
+checkpoints = "problems"
+sdpb = "problems"
+
+[grid]
+gridPoints = 400
+maxN = 16
+
+[[grid.spins]]
+minL = 0
+maxL = 50
+partition_by = 5
+
+[mathematica]
+accuracy_goal = 20
+precision_goal = 20
+
+[sdpb]
+precision = 1024 # in binary digits
+duality_gap_threshold = 1e-7
+nodes_per_job = 2
+processes_per_node = 28
+max_iterations = 700
+max_complementarity = 1e60
+
+[debug]
+dry_run = true # don't run the jobs
+use_debug_partition = true
