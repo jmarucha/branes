@@ -1,0 +1,2 @@
+#!/bin/bash
+squeue -u `whoami` -o "%.9i %.55j %.5t %.10M %.6D %R"
