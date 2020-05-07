@@ -1,9 +1,10 @@
 [directories]
 spherical_integrals = "sample_points/data"
-input = "problems"
-output = "problems"
+sdpb_input = "problems"
+sdpb_output = "problems"
 checkpoints = "problems"
 sdpb = "problems"
+mathematica = "."
 
 [grid]
 gridPoints = 400
@@ -13,6 +14,16 @@ maxN = 16
 minL = 0
 maxL = 50
 partition_by = 5
+
+[[problem]]
+N = 3
+ansatz_size = 10
+spins = [10, 15, 20, 25, 30]
+
+[[problem]]
+N = 3
+ansatz_size = 12
+spins = [10, 15, 20]
 
 [mathematica]
 accuracy_goal = 20

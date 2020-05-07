@@ -1,3 +1,5 @@
+.vscode
+
 data/
 sample_points/slurm*
 sample_points/data/

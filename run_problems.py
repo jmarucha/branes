@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 import os  # os module allows to determine directories
 import subprocess
 from config_parser import config
@@ -36,8 +36,8 @@ for name in fileNames:
         sdpb_dir = config['directories']['sdpb'],
         nodes_per_job = config['sdpb']['nodes_per_job'],
         processes_per_node = config['sdpb']['processes_per_node'],
-        input = os.path.join(config['directories']['input'], in_name),
-        output = os.path.join(config['directories']['output'],out_name),
+        input = os.path.join(config['directories']['sdpb_input'], in_name),
+        output = os.path.join(config['directories']['sdpb_output'],out_name),
         sdpb_params = sdpb_params,
     )
     sbatch_name = os.path.join(config['directories']['sdpb'], 'sbatch_' + name + '.run')
