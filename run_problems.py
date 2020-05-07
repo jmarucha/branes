@@ -11,7 +11,7 @@ sdpb_params = """\
 --dualityGapThreshold {duality_gap_threshold}
 --precision {precision}""".format(**config['sdpb']).replace('\n', ' ')
 
-fileNames = [name[:-3] for name in os.listdir(config['directories']['input']) if name.endswith("_in")]
+fileNames = [name[:-3] for name in os.listdir(config['directories']['sdpb_input']) if name.endswith("_in")]
 fileNames.sort()
 
 job_template = """#!/bin/bash
@@ -33,11 +33,11 @@ for name in fileNames:
     in_name     = name + '_in'
     out_name    = name +'_out'
     text       = job_template.format(
-        sdpb_dir = config['directories']['sdpb'],
+        sdpb_dir = os.path.abspath(config['directories']['sdpb']),
         nodes_per_job = config['sdpb']['nodes_per_job'],
         processes_per_node = config['sdpb']['processes_per_node'],
-        input = os.path.join(config['directories']['sdpb_input'], in_name),
-        output = os.path.join(config['directories']['sdpb_output'],out_name),
+        input = os.path.abspath(os.path.join(config['directories']['sdpb_input'], in_name)),
+        output = os.path.abspath(os.path.join(config['directories']['sdpb_output'],out_name)),
         sdpb_params = sdpb_params,
     )
     sbatch_name = os.path.join(config['directories']['sdpb'], 'sbatch_' + name + '.run')
