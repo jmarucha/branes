@@ -44,18 +44,27 @@ for problem in config['problem']:
                 max_N = problem['ansatz_size'],
                 spin = spin,
                 ) # in Wolfram Language
-        name = 'math_N={}_maxN={}_maxSpin={}.sh'.format(
+        sbatch_name = 'math_N={}_maxN={}_maxSpin={}.sh'.format(
             problem['N'],
             problem['ansatz_size'],
             spin,
         )
-        os.path.join(sdpb_input, name)
-        file = open(name, "w") 
+        sbatch_path = os.path.join(sdpb_input, sbatch_name)
+        file = open(sbatch_path, "w") 
         file.write(job_template.format(
             sdpb_dir = sdpb_input,
             code = code,
             precision = config['sdpb']['precision']
         )) 
         file.close() 
-        subprocess.call(['chmod','+x', name])
-        command = ['sbatch', name]
+        subprocess.call(['chmod','+x', sbatch_path])
+
+        if config['debug']['use_debug_partition']:
+            command = ['sbatch', sbatch_path, '--partition', 'debug']
+        else:
+            command = ['sbatch', sbatch_path]
+
+        if not config['debug']['dry_run']:
+            subprocess.call(command)
+        else:
+            print("MOCK RUN ",' '.join(command))
