@@ -10,16 +10,9 @@ sdpb_params = """\
 --maxComplementarity {max_complementarity}
 --dualityGapThreshold {duality_gap_threshold}
 --precision {precision}""".format(**config['sdpb']).replace('\n', ' ')
-# determine working directory
-directory   = os.path.dirname(os.path.realpath(__file__))
-problemsDir = os.path.join(directory, 'problems')
-
-
 
 fileNames = [name[:-3] for name in os.listdir(config['directories']['input']) if name.endswith("_in")]
 fileNames.sort()
-
-exit(1)
 
 job_template = """#!/bin/bash
 #SBATCH --chdir={sdpb_dir}
@@ -37,14 +30,14 @@ echo ending the job: `date`
 """
 
 for name in fileNames:
-    inName     = name + '_in'
-    outName    = name +'_out'
+    in_name     = name + '_in'
+    out_name    = name +'_out'
     text       = job_template.format(
         sdpb_dir = config['directories']['sdpb'],
         nodes_per_job = config['sdpb']['nodes_per_job'],
         processes_per_node = config['sdpb']['processes_per_node'],
-        input = config['directories']['input'],
-        output = config['directories']['output'],
+        input = os.path.join(config['directories']['input'], in_name),
+        output = os.path.join(config['directories']['output'],out_name),
         sdpb_params = sdpb_params,
     )
     sbatch_name = os.path.join(config['directories']['sdpb'], 'sbatch_' + name + '.run')
@@ -58,7 +51,7 @@ for name in fileNames:
     else:
         command = ['sbatch', sbatch_name]
 
-    if not config['debug']['dry']:
+    if not config['debug']['dry_run']:
         subprocess.call(command)
     else:
         print("MOCK RUN ",' '.join(command))
