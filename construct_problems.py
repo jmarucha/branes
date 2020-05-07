@@ -42,7 +42,7 @@ for problem in config['problem']:
                 dir = mathematica_directory,
                 N = problem['N'],
                 max_N = problem['ansatz_size'],
-                spin = spin,
+                max_spin = spin,
                 ) # in Wolfram Language
         sbatch_name = 'math_N={}_maxN={}_maxSpin={}.sh'.format(
             problem['N'],
