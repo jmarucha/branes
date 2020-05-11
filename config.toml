@@ -27,7 +27,11 @@ spins = [10, 15, 20]
 
 [mathematica]
 accuracy_goal = 20
-precision_goal = 20
+precision_goal = 150
+
+[physics]
+z0 = 0
+m = 0
 
 [sdpb]
 precision = 1024 # in binary digits

@@ -1,11 +1,11 @@
 #!/usr/bin/python
 import os  # os module allows to determine directories
 import subprocess
+print("lol")
+import ..config_parser
 
-
-# submit a job for each entry in the list [..., [minSpin, maxSpin], ...]
-spins = [[0,5], [6,10], [11,15], [16,20], [21,25], [26,30], [31,35], [36,40], [41,45], [46,50]]
-
+print(config)
+exit(1)
 
 # determine working directory
 directory = os.path.dirname(os.path.realpath(__file__))

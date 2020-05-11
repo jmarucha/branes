@@ -3,18 +3,17 @@
 currentDirectory=If[$InputFileName=="",NotebookDirectory[],$InputFileName//DirectoryName];
 
 
-FileNameJoin[{currentDirectory,"util.m"}]//Get;
+FileNameJoin[{currentDirectory,"config_parser.m"}]//Get;
 
 
-(* the value of maxN must be specified *)
-(*maxN=10;*)
+config
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Amplitude*)
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Ansatz*)
 
 
@@ -42,8 +41,11 @@ listCoefficients = Select[listCoefficients, Not[NumberQ[#]]&]; (* remove zeros *
 listCoefficients = listCoefficients//tuSymmetrize//Union;(* apply t-u symmetry *)
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Further conditions on the ansatz*)
+
+
+z0 = config[["physics"]][["z0"]]
 
 
 (* low energy amplitude *)
@@ -168,7 +170,7 @@ ampS = permutationST[fff] + permutationSU[fff];
 ampA = permutationST[fff] - permutationSU[fff];
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Partial amplitudes*)
 
 
@@ -208,7 +210,7 @@ ch3 = partialAmpA-coefsA.listCoefficients//plugRhos//Expand;
 If[Union[{ch1,ch1,ch2}//Flatten]=={0},Print["Basis of functions: OK"],Print["Basis of functions: ERROR"]]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Unitarity*)
 
 
