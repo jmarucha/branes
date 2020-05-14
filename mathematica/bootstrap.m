@@ -2,11 +2,13 @@
 
 (* carefully determine the current directory and load util.m and ansatz.m *)
 currentDirectory=If[$InputFileName=="",NotebookDirectory[],$InputFileName//DirectoryName];
+FileNameJoin[{currentDirectory,"../config_parser.m"}]//Get
+
+mathematicaDir = config[["directories"]][["mathematica"]]
+inputDir = config[["directories"]][["sdpb_input"]]
 
 
-FileNameJoin[{currentDirectory,"convertor.m"}]//Get;
-FileNameJoin[{currentDirectory,"util.m"}]//Get;
-
+Get[FileNameJoin[{mathematicaDir,"convertor.m"}]
 
 (* ::Subsubsection:: *)
 (*Code*)
@@ -29,7 +31,8 @@ If[(FileNames[{nameUpper, nameLower}]//Union)!=({nameUpper, nameLower}//Union),
 (* load amplitudes *)
 NN   = valN;
 maxN = valMaxN;
-FileNameJoin[{currentDirectory,"amplitudes.m"}]//Get;
+Get[FileNameJoin[{mathematicaDir,"amplitudes.m"}]
+
 
 (* select a problem *)
 If[problemType=="A1Bound_A0=1",
@@ -45,11 +48,10 @@ If[problemType=="A1Bound_A0=1",
 setMatrices = constructSDPData[valN][valMaxN, valMaxSpin];
 
 (* export to .m format *)
-Print[""];
-FileNameJoin[{currentDirectory,"problems"}]//SetDirectory;
-t1=AbsoluteTiming[Export[nameUpper, SDP[+objective, normalization, setMatrices]]];
+Print[""];\
+t1=AbsoluteTiming[Export[FileNameJoin[{inputDir,nameUpper}], SDP[+objective, normalization, setMatrices]]];
 Print["Upper bound constructed: ",t1[[1]]];
-t2=AbsoluteTiming[Export[nameLower, SDP[-objective, normalization, setMatrices]]];
+t2=AbsoluteTiming[Export[FileNameJoin[{inputDir,nameLower}], SDP[-objective, normalization, setMatrices]]];
 Print["Lower bound constructed: ",t2[[1]]],
 Print["Files already exist: ", nameUpper,", ", nameLower]
 ];

@@ -2,9 +2,9 @@
 spherical_integrals = "sample_points/data"
 sdpb_input = "problems"
 sdpb_output = "problems"
+sdpb_binaries = "sdpb_binaries"
 checkpoints = "problems"
-sdpb = "problems"
-mathematica = "."
+mathematica = "mathematica"
 
 [grid]
 gridPoints = 400
@@ -32,6 +32,7 @@ precision_goal = 150
 [physics]
 z0 = 0
 m = 0
+problem_type = "A1Bound_A0=1"
 
 [sdpb]
 precision = 1024 # in binary digits

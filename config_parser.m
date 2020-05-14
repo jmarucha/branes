@@ -1,6 +1,7 @@
 (* ::Package:: *)
 
-currentDirectory=If[$InputFileName=="",NotebookDirectory[],$InputFileName//DirectoryName];
+currentDirectory=$InputFileName//DirectoryName
+SetDirectory[currentDirectory];
 python = StartExternalSession["Python"];
 ExternalEvaluate[python, "import os"]
 ExternalEvaluate[python, 

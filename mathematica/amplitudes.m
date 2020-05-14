@@ -1,13 +1,7 @@
 (* ::Package:: *)
 
 currentDirectory=If[$InputFileName=="",NotebookDirectory[],$InputFileName//DirectoryName];
-
-
-FileNameJoin[{currentDirectory,"config_parser.m"}]//Get;
-
-
-config
-
+FileNameJoin[{currentDirectory,"../config_parser.m"}]//Get
 
 (* ::Subsection:: *)
 (*Amplitude*)
