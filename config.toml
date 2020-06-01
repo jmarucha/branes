@@ -1,7 +1,7 @@
 [directories]
 spherical_integrals = "sample_points/data"
 sdpb_input = "problems"
-sdpb_output = "problems"
+sdpb_output = "output"
 sdpb_binaries = "sdpb_binaries"
 checkpoints = "problems"
 mathematica = "mathematica"

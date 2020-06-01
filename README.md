@@ -1,5 +1,7 @@
 # S-matrix numerical bootstrap
+
 ![cluster goes brrr](./doc/brrr.png)
+
 ## Quick start guide
 
 1. Upload the package to the cluster
@@ -107,4 +109,3 @@ Well, shit happens.
 It's because it dies. Shit happens.
 
 ## Plans for the future
-

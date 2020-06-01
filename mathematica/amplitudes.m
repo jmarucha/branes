@@ -3,6 +3,8 @@
 currentDirectory=If[$InputFileName=="",NotebookDirectory[],$InputFileName//DirectoryName];
 FileNameJoin[{currentDirectory,"../config_parser.m"}]//Get
 
+
+
 (* ::Subsection:: *)
 (*Amplitude*)
 
@@ -46,7 +48,11 @@ z0 = config[["physics"]][["z0"]]
 lowEnergyAmplitude = 1/4 A0(-s^2+t^2+u^2)+A1 s(-s^2+2t^2+2u^2);
 
 
-plugRho[expr_]:=expr/.{rhos[a_]:>((Sqrt[-z0]+I Sqrt[s])/(Sqrt[-z0]-I Sqrt[s]))^a, rhot[b_]:>((Sqrt[-z0]+I Sqrt[t])/(Sqrt[-z0]-I Sqrt[t]))^b, rhou[c_]:>((Sqrt[-z0]+I Sqrt[u])/(Sqrt[-z0]-I Sqrt[u]))^c};
+plugRho[expr_]:=expr/.{
+	rhos[a_]:>((Sqrt[-z0]+I Sqrt[s])/(Sqrt[-z0]-I Sqrt[s]))^a,
+	rhot[b_]:>((Sqrt[-z0]+I Sqrt[t])/(Sqrt[-z0]-I Sqrt[t]))^b,
+	rhou[c_]:>((Sqrt[-z0]+I Sqrt[u])/(Sqrt[-z0]-I Sqrt[u]))^c
+	};
 
 
 expand[order_][expr_]:=Module[{temp, zeroOrderTerm, coef},
