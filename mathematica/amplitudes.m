@@ -4,6 +4,8 @@ currentDirectory=If[$InputFileName=="",NotebookDirectory[],$InputFileName//Direc
 FileNameJoin[{currentDirectory,"../config_parser.m"}]//Get
 
 
+(*for debug purposes set maxN to some number*)
+
 
 (* ::Subsection:: *)
 (*Amplitude*)
@@ -72,7 +74,6 @@ formObjects[expr_]:=Module[{temp, zeroTerm},
    temp = temp/.x^a_.:>obj[a,0,0];
    zeroTerm = temp/.obj[__]:>0;
    temp = temp+zeroTerm(obj[0,0,0]-1)//Expand
-
 ]
 
 
@@ -97,7 +98,8 @@ extract[order_][expr_]:=Module[{temp, zeroOrderTerm, coef},
   Do[
       coef     = Coefficient[temp,s^(n/2)];
       expan[n] = coef//obtainCoefficients//Flatten//Union;  
-  ,{n,1,2order}];  
+  ,{n,1,2order}];
+  
 ];
 
 
@@ -105,8 +107,13 @@ extract[order_][expr_]:=Module[{temp, zeroOrderTerm, coef},
 ff-lowEnergyAmplitude//extract[4];
 
 
+HighEnergy1 = Total[listCoefficients /. \[Alpha][a_,b_,c_]:>\[Alpha][a,b,c]*If[Divisible[a+b+c,2],1,-1]]==0;
+HighEnergy2 = Total[listCoefficients /. \[Alpha][a_,b_,c_]:>a*\[Alpha][a,b,c]*If[Divisible[a+b+c,2],1,-1]]==0;
+
+
 systemShort = Table[expan[i]==0//Thread,{i,0,5}]//Flatten//Factor//Union;
 systemFull  = Table[expan[i]==0//Thread,{i,0,7}]//Flatten//Factor//Union;
+systemFull = If[config[["physics"]][["high_energy_constraints"]], systemFull~Join~{HighEnergy1, HighEnergy2}, systemFull]
 
 
 (* solution: split in two steps in order to speed up the process *)
@@ -129,7 +136,7 @@ check = lowEnergyAmplitude-check/.{u->-s-t}//Simplify;
 If[check==0,Print["Additional constraints: OK"], Print["Additional constraints: ERROR"]]
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Independent parameters*)
 
 
@@ -152,7 +159,7 @@ ch1 = fff-Coefficient[fff,listCoefficients].listCoefficients//Expand;
 If[Union[{ch0,ch1}//Flatten]=={0},Print["Independent coefficients: OK"],Print["Independent coefficients: ERROR"]]
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Irreducible representations*)
 
 

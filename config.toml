@@ -11,7 +11,7 @@ gridPoints = 400
 maxN = 16
 
 [[grid.spins]]
-minL = 0
+minL = 0   
 maxL = 50
 partition_by = 5
 
@@ -30,9 +30,10 @@ accuracy_goal = 20
 precision_goal = 150
 
 [physics]
-z0 = 0
+z0 = -1
 m = 0
 problem_type = "A1Bound_A0=1"
+high_energy_constraints = true
 
 [sdpb]
 precision = 1024 # in binary digits
