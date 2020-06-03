@@ -11,7 +11,7 @@ sdp2input = os.path.join(
     "sdp2input",
 )
 
-job_template = """{{header}}
+job_template = """{header}
 #-------------------- actual job: start------------
 echo starting the job: `date`
 module load mathematica
