@@ -3,15 +3,12 @@ import os  # os module allows to determine directories
 import subprocess
 import sys
 
+directory = os.path.dirname(os.path.realpath(__file__))
+
 os.chdir("..") # very very bad practice
 sys.path.append(".") # thats a very bad practice 
 from config_parser import config # pylint: disable=import-error
-
-directory = os.path.dirname(os.path.realpath(__file__))
 os.chdir(directory) # never ever do something like that
-
-# determine working directory
-
 
 text1 = """#!/bin/bash\n\
 #SBATCH --chdir %s\n\
