@@ -43,6 +43,10 @@ processes_per_node = 28
 max_iterations = 700
 max_complementarity = 1e60
 
+[cluster]
+account = "fsl"
+
+
 [debug]
 dry_run = true # don't run the jobs
 use_debug_partition = true

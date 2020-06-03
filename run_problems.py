@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 import os  # os module allows to determine directories
 import subprocess
-from config_parser import config
+from util import config, gen_header
 
 sdpb_params = """\
 --procsPerNode={processes_per_node}
@@ -14,13 +14,7 @@ sdpb_params = """\
 fileNames = [name[:-3] for name in os.listdir(config['directories']['sdpb_input']) if name.endswith("_in")]
 fileNames.sort()
 
-job_template = """#!/bin/bash
-#SBATCH --chdir={sdpb_dir}
-#SBATCH --nodes={nodes_per_job}
-#SBATCH --ntasks-per-node={processes_per_node}
-#SBATCH --mem=0
-#SBATCH --time=12:00:00
-#SBATCH --account=fsl
+job_template = """{header}
 #-------------------- actual job: start------------
 echo starting the job: `date`
 echo Tasks $SLURM_NTASKS
@@ -33,7 +27,7 @@ for name in fileNames:
     in_name     = name + '_in'
     out_name    = name +'_out'
     text       = job_template.format(
-        sdpb_dir = os.path.abspath(config['directories']['sdpb']),
+        header = gen_header(os.path.abspath(config['directories']['sdpb'])),
         nodes_per_job = config['sdpb']['nodes_per_job'],
         processes_per_node = config['sdpb']['processes_per_node'],
         input = os.path.abspath(os.path.join(config['directories']['sdpb_input'], in_name)),

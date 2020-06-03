@@ -1,7 +1,7 @@
 (* ::Package:: *)
 
 currentDirectory=If[$InputFileName=="",NotebookDirectory[],$InputFileName//DirectoryName];
-FileNameJoin[{currentDirectory,"../config_parser.m"}]//Get
+FileNameJoin[{currentDirectory,"../get_config.m"}]//Get
 
 
 (*for debug purposes set maxN to some number*)

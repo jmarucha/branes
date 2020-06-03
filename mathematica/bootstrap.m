@@ -2,7 +2,7 @@
 
 (* carefully determine the current directory and load util.m and ansatz.m *)
 currentDirectory=If[$InputFileName=="",NotebookDirectory[],$InputFileName//DirectoryName];
-FileNameJoin[{currentDirectory,"../config_parser.m"}]//Get
+FileNameJoin[{currentDirectory,"../get_config.m"}]//Get
 
 mathematicaDir = config[["directories"]][["mathematica"]]
 inputDir = config[["directories"]][["sdpb_input"]]
