@@ -16,10 +16,14 @@ text1 = """#!/bin/bash\n\
 #SBATCH --ntasks 28\n\
 #SBATCH --cpus-per-task 1\n\
 #SBATCH --mem=0\n\
-#SBATCH --time 12:00:00\n\
+#SBATCH --time %s\n\
 #SBATCH --account fsl
 #SBATCH --partition %s
-""" % (directory,  "debug" if config['debug']['use_debug_partition'] else "paralell")
+""" % (
+    directory,
+    "00:30:00" if config['debug']['use_debug_partition'] else "12:00:00",
+    "debug" if config['debug']['use_debug_partition'] else "parallel"
+)
 
 text2 = """
 #-------------------- actual job: start------------
