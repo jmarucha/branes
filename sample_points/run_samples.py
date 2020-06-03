@@ -18,8 +18,8 @@ text1 = """#!/bin/bash\n\
 #SBATCH --mem=0\n\
 #SBATCH --time 12:00:00\n\
 #SBATCH --account fsl
-""" % directory
-
+#SBATCH --partition %s
+""" % (directory,  "debug" if config['debug']['use_debug_partition'] else "paralell")
 
 text2 = """
 #-------------------- actual job: start------------
