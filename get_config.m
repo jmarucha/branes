@@ -1,5 +1,5 @@
 (* ::Package:: *)
-
+oldDirectory = Directory[]
 currentDirectory=$InputFileName//DirectoryName
 SetDirectory[currentDirectory];
 python = StartExternalSession["Python"];
@@ -10,3 +10,4 @@ ExternalEvaluate[python,
 ExternalEvaluate[python,File[FileNameJoin[{currentDirectory,"util.py"}]]];
 config = ExternalValue[python, "config"];
 DeleteObject[python];
+SetDirectory[oldDirectory] (* to avoid mess *)

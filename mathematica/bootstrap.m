@@ -6,10 +6,10 @@ FileNameJoin[{currentDirectory,"../get_config.m"}]//Get
 
 mathematicaDir = config[["directories"]][["mathematica"]]
 inputDir = config[["directories"]][["sdpb_input"]]
+gridDir = config[["directories"]][["spherical_integrals"]]
 
 
 Get[FileNameJoin[{mathematicaDir,"convertor.m"}]]
-
 
 
 (* ::Subsubsection:: *)
@@ -27,7 +27,7 @@ nameUpper = "upper"<>problemType<>details<>".m";
 nameLower = "lower"<>problemType<>details<>".m";
 
 (* execute below only if one or both .m files are missing *)
-FileNameJoin[{currentDirectory,"problems"}]//SetDirectory;
+SetDirectory[[inputDir]];
 If[(FileNames[{nameUpper, nameLower}]//Union)!=({nameUpper, nameLower}//Union),
 
 (* load amplitudes *)
@@ -60,7 +60,7 @@ Print["Files already exist: ", nameUpper,", ", nameLower]
 
 Write[$Output,"| "<>nameUpper<>", "<>nameLower<>" |"]
 
-]
+]]
 
 
 constructSDPData[valN_][valMaxN_, valMaxSpin_]:=Module[{count=0,names,fNum,loadedRule,spinValue,setMatrices1={},setMatrices2Zero={},setMatrices2={},setMatrices3={}},
@@ -71,7 +71,7 @@ setMatrices2//SetSharedVariable;
 setMatrices3//SetSharedVariable;
 
 (* sample points *)
-FileNameJoin[{currentDirectory,"sample_points","data"}]//SetDirectory;
+SetDirectory[gridDir];
 names=Table[FileNames["spin="<>ToString[spin]<>ToString["_*"]],{spin,0,valMaxSpin}]//Flatten;
 
 Write["stdout", "Problem type: "<>problemType<>". Parameters: N="<>ToString[valN]<>", maxN="<>ToString[valMaxN]<>", maxSpin="<>ToString[valMaxSpin]];
@@ -100,6 +100,8 @@ ParallelDo[
 setMatrices1~Join~setMatrices2~Join~setMatrices3//convert
 
 ]
+
+
 
 
 
