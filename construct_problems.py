@@ -4,10 +4,9 @@ import subprocess
 from util import config, gen_header
 
 # list is of the form [..., [valN, valMaxN, valMaxSpin], ...]
-mathematica_directory = os.path.abspath(config['directories']['mathematica'])
-sdpb_input = os.path.abspath(config['directories']['sdpb_input'])
-sdp2input = os.path.join(
-    os.path.abspath(config['directories']['sdpb_binaries']),
+mathematica_directory = config['directories']['mathematica']
+sdpb_input = config['directories']['sdpb_input']
+sdp2input = os.path.join(config['directories']['sdpb_binaries'],
     "sdp2input",
 )
 
