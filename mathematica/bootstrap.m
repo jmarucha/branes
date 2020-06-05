@@ -8,7 +8,9 @@ mathematicaDir = config[["directories"]][["mathematica"]]
 inputDir = config[["directories"]][["sdpb_input"]]
 
 
-Get[FileNameJoin[{mathematicaDir,"convertor.m"}]
+Get[FileNameJoin[{mathematicaDir,"convertor.m"}]]
+
+
 
 (* ::Subsubsection:: *)
 (*Code*)
@@ -98,6 +100,8 @@ ParallelDo[
 setMatrices1~Join~setMatrices2~Join~setMatrices3//convert
 
 ]
+
+
 
 
 (* ::Subsubsection:: *)
