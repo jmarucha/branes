@@ -1,6 +1,10 @@
 import toml
+import os
 
 config = toml.load('config.toml')
+
+for k, v in config['directories'].items():
+    config['directories'][k] = os.path.abspath(v)
 
 def gen_header(directory, nodes_per_job = config['sdpb']['nodes_per_job']):
     return """#!/bin/bash
