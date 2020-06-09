@@ -2,11 +2,11 @@
 
 (* carefully determine the current directory and load util.m and ansatz.m *)
 currentDirectory=If[$InputFileName=="",NotebookDirectory[],$InputFileName//DirectoryName];
-FileNameJoin[{currentDirectory,"../get_config.m"}]//Get
-
+FileNameJoin[{currentDirectory,"../get_config.m"}]//Get;
 mathematicaDir = config[["directories"]][["mathematica"]]
 inputDir = config[["directories"]][["sdpb_input"]]
 gridDir = config[["directories"]][["spherical_integrals"]]
+problemType = config[["physics"]][["problem_type"]]
 
 
 Get[FileNameJoin[{mathematicaDir,"convertor.m"}]]
@@ -27,15 +27,13 @@ nameUpper = "upper"<>problemType<>details<>".m";
 nameLower = "lower"<>problemType<>details<>".m";
 
 (* execute below only if one or both .m files are missing *)
-SetDirectory[[inputDir]];
+SetDirectory[inputDir];
 If[(FileNames[{nameUpper, nameLower}]//Union)!=({nameUpper, nameLower}//Union),
 
 (* load amplitudes *)
 NN   = valN;
 maxN = valMaxN;
-Get[FileNameJoin[{mathematicaDir,"amplitudes.m"}]
-
-
+Get[FileNameJoin[{mathematicaDir,"amplitudes.m"}]]
 (* select a problem *)
 If[problemType=="A1Bound_A0=1",
     unitarityTProblem     = {unitarityT[[1]]+unitarityT[[2]]}~Join~unitarityT[[3;;-1]];
@@ -57,10 +55,9 @@ t2=AbsoluteTiming[Export[FileNameJoin[{inputDir,nameLower}], SDP[-objective, nor
 Print["Lower bound constructed: ",t2[[1]]],
 Print["Files already exist: ", nameUpper,", ", nameLower]
 ];
+Write[$Output,"| "<>FileNameJoin[{inputDir,nameUpper}]<>", "<>FileNameJoin[{inputDir,nameLower}]<>" |"]
 
-Write[$Output,"| "<>nameUpper<>", "<>nameLower<>" |"]
-
-]]
+]
 
 
 constructSDPData[valN_][valMaxN_, valMaxSpin_]:=Module[{count=0,names,fNum,loadedRule,spinValue,setMatrices1={},setMatrices2Zero={},setMatrices2={},setMatrices3={}},
@@ -110,4 +107,7 @@ setMatrices1~Join~setMatrices2~Join~setMatrices3//convert
 (*Run*)
 
 
-(*constructSDPProblem[3][10,10]*)
+constructSDPProblem[3][10,10]
+
+
+len

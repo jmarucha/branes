@@ -1,5 +1,6 @@
 import toml
 import os
+import json
 
 config = toml.load('config.toml')
 
@@ -25,4 +26,4 @@ def gen_header(directory, nodes_per_job = config['sdpb']['nodes_per_job']):
 )
 
 if __name__ == "__main__":
-    print(config)
+    print(json.dumps(config))

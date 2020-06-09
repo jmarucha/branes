@@ -11,7 +11,7 @@ sdpb_params = """\
 --dualityGapThreshold {duality_gap_threshold}
 --precision {precision}""".format(**config['sdpb']).replace('\n', ' ')
 
-sdpb = os.path.join(config['directories']['sdpb_binaries'], "sdp2input")
+sdpb = os.path.join(config['directories']['sdpb_binaries'], "sdpb")
 
 fileNames = [name[:-3] for name in os.listdir(config['directories']['sdpb_input']) if name.endswith("_in")]
 fileNames.sort()
