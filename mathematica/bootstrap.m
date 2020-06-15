@@ -28,7 +28,7 @@ nameLower = "lower"<>problemType<>details<>".m";
 
 (* execute below only if one or both .m files are missing *)
 SetDirectory[inputDir];
-If[True || (FileNames[{nameUpper, nameLower}]//Union)!=({nameUpper, nameLower}//Union),
+If[(FileNames[{nameUpper, nameLower}]//Union)!=({nameUpper, nameLower}//Union),
 
 (* load amplitudes *)
 NN   = valN;
@@ -121,7 +121,7 @@ SPDBConstraint[name_] := Module[{loadedRule, spinValue, output},
     (* unitarity A: spin\[GreaterEqual]1 and odd *)
      If[(spinValue>=1)&&OddQ[spinValue],unitarityAProblem/.j->spinValue//.loadedRule, 0]}//Select[ArrayQ]
 ];
-ParallelMap[SPDBConstraint,names]//Flatten[#,1]&
+ParallelMap[SPDBConstraint,names]//Flatten[#,1]& // convert
 
 ]
 
@@ -134,7 +134,7 @@ ParallelMap[SPDBConstraint,names]//Flatten[#,1]&
 (*Run*)
 
 
-constructSDPProblem[3][6,2]
+(*constructSDPProblem[3][6,2]*)
 
 
 len
