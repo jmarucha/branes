@@ -28,7 +28,7 @@ nameLower = "lower"<>problemType<>details<>".m";
 
 (* execute below only if one or both .m files are missing *)
 SetDirectory[inputDir];
-If[(FileNames[{nameUpper, nameLower}]//Union)!=({nameUpper, nameLower}//Union),
+If[True || (FileNames[{nameUpper, nameLower}]//Union)!=({nameUpper, nameLower}//Union),
 
 (* load amplitudes *)
 NN   = valN;
@@ -45,11 +45,11 @@ If[problemType=="A1Bound_A0=1",
 ];
 
 (* input *)
-setMatrices = constructSDPData[valN][valMaxN, valMaxSpin];
+AbsoluteTiming[setMatrices = constructSDPData2[valN][valMaxN, valMaxSpin]][[1]]//Print["Grid processed: ", #]&;
 
 (* export to .m format *)
-Print[""];\
-t1=AbsoluteTiming[Export[FileNameJoin[{inputDir,nameUpper}], SDP[+objective, normalization, setMatrices]]];
+Print[""];
+t1=AbsoluteTiming[Export[FileNameJoin[{inputDir,nameUpper}], SDP[ objective, normalization, setMatrices]]];
 Print["Upper bound constructed: ",t1[[1]]];
 t2=AbsoluteTiming[Export[FileNameJoin[{inputDir,nameLower}], SDP[-objective, normalization, setMatrices]]];
 Print["Lower bound constructed: ",t2[[1]]],
@@ -101,13 +101,40 @@ setMatrices1~Join~setMatrices2~Join~setMatrices3//convert
 
 
 
+constructSDPData2[valN_][valMaxN_, valMaxSpin_]:=Module[{count=0,names,fNum,setMatrices1={},setMatrices2Zero={},setMatrices2={},setMatrices3={}},
+
+(* sample points *)
+SetDirectory[gridDir];
+names=Table[FileNames["spin="<>ToString[spin]<>ToString["_*"]],{spin,0,valMaxSpin}]//Flatten;
+
+Write["stdout", "Problem type: "<>problemType<>". Parameters: N="<>ToString[valN]<>", maxN="<>ToString[valMaxN]<>", maxSpin="<>ToString[valMaxSpin]];
+Write["stdout", "Total number of sample points: "<>ToString[names//Length]];
+
+
+
+SPDBConstraint[name_] := Module[{loadedRule, spinValue, output},
+	loadedRule = name//Get//Dispatch;
+    spinValue  = name//selectSpin;
+    (* unitarity T: spin\[GreaterEqual]0 and even *)
+    {If[EvenQ[spinValue],unitarityTProblem/.j->spinValue//.loadedRule, 0],
+     If[EvenQ[spinValue],unitaritySProblem/.j->spinValue//.loadedRule, 0],
+    (* unitarity A: spin\[GreaterEqual]1 and odd *)
+     If[(spinValue>=1)&&OddQ[spinValue],unitarityAProblem/.j->spinValue//.loadedRule, 0]}//Select[ArrayQ]
+];
+ParallelMap[SPDBConstraint,names]//Flatten[#,1]&
+
+]
+
+
+
+
 
 
 (* ::Subsubsection:: *)
 (*Run*)
 
 
-constructSDPProblem[3][10,10]
+constructSDPProblem[3][6,2]
 
 
 len

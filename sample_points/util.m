@@ -5,17 +5,18 @@ storageDirectory=FileNameJoin[{currentDirectory,"data"}];
 
 
 currentDirectory//SetDirectory;
+<<"../get_config.m"
 
 
-mass=0;
-s0=-1;
+mass=config[["physics"]][["m"]];
+s0=config[["physics"]][["z0"]];
 
 
-workPrec=150;
-goalPrec=20;
+workPrec=config[["mathematica"]][["accuracy_goal"]];
+goalPrec=config[["mathematica"]][["precision_goal"]];
 
 
-numberGridPoints=400;
+numberGridPoints=config[["grid"]][["gridPoints"]];
 
 
 Protect[m,n,j,\[Mu]1,\[Mu]2];
@@ -25,3 +26,9 @@ Protect[m,n,j,\[Mu]1,\[Mu]2];
 listToCompute="list_objects.m"//Get;
 listToCompute=Table[listToCompute,{j,minSpin,maxSpin}]//Flatten//Union;
 listToCompute=Cases[listToCompute,int[A__][B__][j_,\[Mu]_,\[Mu]p_]:>int[A][B][j,\[Mu],\[Mu]p]/;((j>=Abs[\[Mu]])&&(j>=Abs[\[Mu]p]))];
+
+
+
+
+
+
