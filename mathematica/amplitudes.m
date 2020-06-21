@@ -108,12 +108,13 @@ ff-lowEnergyAmplitude//extract[4];
 
 
 HighEnergy1 = Total[listCoefficients /. \[Alpha][a_,b_,c_]:>\[Alpha][a,b,c]*If[Divisible[a+b+c,2],1,-1]]==0;
-HighEnergy2 = Total[listCoefficients /. \[Alpha][a_,b_,c_]:>a*\[Alpha][a,b,c]*If[Divisible[a+b+c,2],1,-1]]==0;
 
 
 systemShort = Table[expan[i]==0//Thread,{i,0,5}]//Flatten//Factor//Union;
 systemFull  = Table[expan[i]==0//Thread,{i,0,7}]//Flatten//Factor//Union;
-systemFull = If[config[["physics"]][["high_energy_constraints"]], systemFull~Join~{HighEnergy1, HighEnergy2}, systemFull]
+If[config[["physics"]][["high_energy_constraints"]], AppendTo[systemFull,HighEnergy1]]
+If[config[["physics"]][["high_spin_constraints"]], AppendTo[systemFull,HighSpin1]]
+
 
 
 (* solution: split in two steps in order to speed up the process *)

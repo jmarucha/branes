@@ -3,10 +3,10 @@
 (* carefully determine the current directory and load util.m and ansatz.m *)
 currentDirectory=If[$InputFileName=="",NotebookDirectory[],$InputFileName//DirectoryName];
 FileNameJoin[{currentDirectory,"../get_config.m"}]//Get;
-mathematicaDir = config[["directories"]][["mathematica"]]
-inputDir = config[["directories"]][["sdpb_input"]]
-gridDir = config[["directories"]][["spherical_integrals"]]
-problemType = config[["physics"]][["problem_type"]]
+mathematicaDir = config[["directories"]][["mathematica"]];
+inputDir = config[["directories"]][["sdpb_input"]];
+gridDir = config[["directories"]][["spherical_integrals"]];
+problemType = config[["physics"]][["problem_type"]];
 
 
 Get[FileNameJoin[{mathematicaDir,"convertor.m"}]]
@@ -28,7 +28,7 @@ nameLower = "lower"<>problemType<>details<>".m";
 
 (* execute below only if one or both .m files are missing *)
 SetDirectory[inputDir];
-If[(FileNames[{nameUpper, nameLower}]//Union)!=({nameUpper, nameLower}//Union),
+If[True ||(FileNames[{nameUpper, nameLower}]//Union)!=({nameUpper, nameLower}//Union),
 
 (* load amplitudes *)
 NN   = valN;
@@ -41,6 +41,14 @@ If[problemType=="A1Bound_A0=1",
     unitarityAProblem     = {unitarityA[[1]]+unitarityA[[2]]}~Join~unitarityA[[3;;-1]]; 
     normalization         = Table[If[i==1,1,0],{i,1,len}]; 
     objective             = Table[If[i==2,1,0],{i,1,len}];
+    type                  = problemType
+];
+If[problemType=="A0Bound_A1=1",
+    unitarityTProblem     = {unitarityT[[1]]+unitarityT[[2]]}~Join~unitarityT[[3;;-1]];
+    unitaritySProblem     = {unitarityS[[1]]+unitarityS[[2]]}~Join~unitarityS[[3;;-1]];
+    unitarityAProblem     = {unitarityA[[1]]+unitarityA[[2]]}~Join~unitarityA[[3;;-1]]; 
+    normalization         = Table[If[i==2,1,0],{i,1,len}]; 
+    objective             = Table[If[i==1,1,0],{i,1,len}];
     type                  = problemType
 ];
 
@@ -134,7 +142,7 @@ ParallelMap[SPDBConstraint,names]//Flatten[#,1]& // convert
 (*Run*)
 
 
-(*constructSDPProblem[3][6,2]*)
+constructSDPProblem[3][6,2]
 
 
-len
+
