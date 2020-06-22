@@ -26,14 +26,14 @@ ansatz_size = 12
 spins = [10, 15, 20]
 
 [mathematica]
-accuracy_goal = 20
-precision_goal = 150
+working_precision = 150
+precision_goal = 20
 
 [physics]
 z0 = -1
 m = 0
-problem_type = "A1Bound_A0=1"
-high_energy_constraints = true
+problem_type = "A0Bound_A1=1"
+high_energy_constraints = false
 
 [sdpb]
 precision = 1024 # in binary digits

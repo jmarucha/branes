@@ -102,7 +102,7 @@ constructSamplePoints[spinList_]:=Module[{existingFiles,spin,tmp,res,name,point,
             name      = "spin="<>ToString[spin]<>"_"<>fullPoint<>".m";
             flag      = MemberQ[existingFiles,name];
             If[flag==False,
-              name = FileNameJoin[{currentDirectory,"data",name}];
+              name = FileNameJoin[{storageDirectory,name}];
               res  = tmp//plug[point];
               res  = samplePoints[[k]]~Join~res;
               Export[name,res]
@@ -113,7 +113,7 @@ constructSamplePoints[spinList_]:=Module[{existingFiles,spin,tmp,res,name,point,
 ]
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Run*)
 
 

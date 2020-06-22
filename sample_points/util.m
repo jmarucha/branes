@@ -1,7 +1,6 @@
 (* ::Package:: *)
 
 currentDirectory=If[$InputFileName=="",NotebookDirectory[],$InputFileName//DirectoryName];
-storageDirectory=FileNameJoin[{currentDirectory,"data"}];
 
 
 currentDirectory//SetDirectory;
@@ -10,9 +9,10 @@ currentDirectory//SetDirectory;
 
 mass=config[["physics"]][["m"]];
 s0=config[["physics"]][["z0"]];
+storageDirectory=config[["directories"]][["spherical_integrals"]];
 
 
-workPrec=config[["mathematica"]][["accuracy_goal"]];
+workPrec=config[["mathematica"]][["working_precision"]];
 goalPrec=config[["mathematica"]][["precision_goal"]];
 
 
