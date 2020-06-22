@@ -24,8 +24,9 @@ input1=${{array[0]}}
 output1=${{input1:0:-2}}'_in'
 input2=${{array[1]}}
 output2=${{input2:0:-2}}'_in'
-{sdp2input} --precision={precision} --input=$input1 --output=$output1
-{sdp2input} --precision={precision} --input=$input2 --output=$output2
+{sdp2input} --precision={precision} --input=$input1 --output=$output1 &
+{sdp2input} --precision={precision} --input=$input2 --output=$output2 &
+wait
 echo ending the job: `date`
 #-------------------- actual job: end------------"""
 

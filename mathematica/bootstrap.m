@@ -141,8 +141,4 @@ ParallelMap[SPDBConstraint,names]//Flatten[#,1]& // convert
 (* ::Subsubsection:: *)
 (*Run*)
 
-
-constructSDPProblem[3][6,2]
-
-
-
+(*constructSDPProblem[3][6,2]*)
