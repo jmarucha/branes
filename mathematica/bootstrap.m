@@ -51,6 +51,14 @@ If[problemType=="A0Bound_A1=1",
     objective             = Table[If[i==1,1,0],{i,1,len}];
     type                  = problemType
 ];
+If[problemType=="A0Bound_A1=-1",
+    unitarityTProblem     = {unitarityT[[1]]+unitarityT[[2]]}~Join~unitarityT[[3;;-1]];
+    unitaritySProblem     = {unitarityS[[1]]+unitarityS[[2]]}~Join~unitarityS[[3;;-1]];
+    unitarityAProblem     = {unitarityA[[1]]+unitarityA[[2]]}~Join~unitarityA[[3;;-1]]; 
+    normalization         = Table[If[i==2,-1,0],{i,1,len}]; 
+    objective             = Table[If[i==1,1,0],{i,1,len}];
+    type                  = problemType
+];
 
 (* input *)
 AbsoluteTiming[setMatrices = constructSDPData2[valN][valMaxN, valMaxSpin]][[1]]//Print["Grid processed: ", #]&;
