@@ -117,7 +117,7 @@ setMatrices1~Join~setMatrices2~Join~setMatrices3//convert
 
 
 
-constructSDPData2[valN_][valMaxN_, valMaxSpin_]:=Module[{count=0,names,fNum,setMatrices1={},setMatrices2Zero={},setMatrices2={},setMatrices3={}},
+constructSDPData2[valN_][valMaxN_, valMaxSpin_]:=Module[{count=0,names,fNum,problemMatrices,HSConstraints},
 
 (* sample points *)
 SetDirectory[gridDir];
@@ -126,21 +126,23 @@ names=Table[FileNames["spin="<>ToString[spin]<>ToString["_*"]],{spin,0,valMaxSpi
 Write["stdout", "Problem type: "<>problemType<>". Parameters: N="<>ToString[valN]<>", maxN="<>ToString[valMaxN]<>", maxSpin="<>ToString[valMaxSpin]];
 Write["stdout", "Total number of sample points: "<>ToString[names//Length]];
 
-
-
-SPDBConstraint[name_] := Module[{loadedRule, spinValue, output},
+SPDBConstraint[name_] := Module[{loadedRule, spinValue},
 	loadedRule = name//Get//Dispatch;
     spinValue  = name//selectSpin;
     (* unitarity T: spin\[GreaterEqual]0 and even *)
     {If[EvenQ[spinValue],unitarityTProblem/.j->spinValue//.loadedRule, 0],
      If[EvenQ[spinValue],unitaritySProblem/.j->spinValue//.loadedRule, 0],
     (* unitarity A: spin\[GreaterEqual]1 and odd *)
-     If[(spinValue>=1)&&OddQ[spinValue],unitarityAProblem/.j->spinValue//.loadedRule, 0],
-     If[(spinValue==0)&&config[["physics"]][["high_spin_constraints"]], {highSpinConstraint//.loadedRule}, 0]
-     }//Select[ArrayQ]
+     If[(spinValue>=1)&&OddQ[spinValue],unitarityAProblem/.j->spinValue//.loadedRule, 0]}//Select[ArrayQ]
 ];
-ParallelMap[SPDBConstraint,names]//Flatten[#,1]& // N[#,4]& // convert
-
+HSConstraint[name_] := Module[{loadedRule},
+	If[(name//selectSpin) == 2 && config[["physics"]][["high_spin_constraints"]],
+	loadedRule = name//Get//Dispatch;
+	PositiveMatrixWithPrefactor[1,{{highSpinConstraint}}//.loadedRule],0]
+];
+HSConstraints = ParallelMap[HSConstraint,names]//Select[#=!=0&];
+problemMatrices = ParallelMap[SPDBConstraint,names]//Flatten[#,1]& // convert;
+HSConstraints ~ Join ~ problemMatrices
 ]
 
 
@@ -152,7 +154,9 @@ ParallelMap[SPDBConstraint,names]//Flatten[#,1]& // N[#,4]& // convert
 (*Run*)
 
 
-(*constructSDPProblem[3][6,2]*)s
+(*constructSDPProblem[3][6,2]*)
+
+
 
 
 
