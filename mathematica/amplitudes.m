@@ -178,15 +178,6 @@ ampS = permutationST[fff] + permutationSU[fff];
 ampA = permutationST[fff] - permutationSU[fff];
 
 
-(* ::Subsubsection:: *)
-(*High Spin*)
-
-
-If[config[["physics"]][["high_spin_constraints"]],
-	highSpin = Sum[\[Alpha][a,b,c]*b*Im[rhos^a]/rhos^c,{a,0,maxN},{b,0,maxN-a},{c,0,maxN-a-b}]//tuSymmetrize;
-	]
-
-
 (* ::Subsection:: *)
 (*Partial amplitudes*)
 
@@ -241,3 +232,16 @@ unitarityA={{{1,1},{1,1}}}~Join~Table[{{0,I coefsA[[i]]},{I coefsA[[i]]//Conjuga
 
 
 Print["Unitarity lists: constructed"];
+
+
+MatrixForm /@ unitarityA
+
+
+(* ::Subsubsection:: *)
+(*High Spin*)
+
+
+If[config[["physics"]][["high_spin_constraints"]],
+	highSpin = Sum[\[Alpha][a,b,c]*b*Im[rhos^a]/rhos^c,{a,0,maxN},{b,0,maxN-a},{c,0,maxN-a-b}]//tuSymmetrize //.solution;
+	highSpinConstraint = {0}~Join~Coefficient[highSpin,listCoefficients];
+	]
