@@ -5,6 +5,7 @@ FileNameJoin[{currentDirectory,"../get_config.m"}]//Get
 
 
 (*for debug purposes set maxN to some number*)
+(*maxN=8*)
 
 
 (* ::Subsection:: *)
@@ -113,7 +114,6 @@ HighEnergy1 = Total[listCoefficients /. \[Alpha][a_,b_,c_]:>\[Alpha][a,b,c]*If[D
 systemShort = Table[expan[i]==0//Thread,{i,0,5}]//Flatten//Factor//Union;
 systemFull  = Table[expan[i]==0//Thread,{i,0,7}]//Flatten//Factor//Union;
 If[config[["physics"]][["high_energy_constraints"]], AppendTo[systemFull,HighEnergy1]]
-If[config[["physics"]][["high_spin_constraints"]], AppendTo[systemFull,HighSpin1]]
 
 
 
@@ -176,6 +176,15 @@ permutationSU[expr_]:=expr/.{rhos->rhou, rhou->rhos}
 ampT = permutationST[fff] + permutationSU[fff] + NN fff;
 ampS = permutationST[fff] + permutationSU[fff];
 ampA = permutationST[fff] - permutationSU[fff];
+
+
+(* ::Subsubsection:: *)
+(*High Spin*)
+
+
+If[config[["physics"]][["high_spin_constraints"]],
+	highSpin = Sum[\[Alpha][a,b,c]*b*Im[rhos^a]/rhos^c,{a,0,maxN},{b,0,maxN-a},{c,0,maxN-a-b}]//tuSymmetrize;
+	]
 
 
 (* ::Subsection:: *)

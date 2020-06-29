@@ -34,6 +34,7 @@ z0 = -1
 m = 0
 problem_type = "A0Bound_A1=1"
 high_energy_constraints = false
+high_spin_constraints = true
 
 [sdpb]
 precision = 1024 # in binary digits

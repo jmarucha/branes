@@ -135,7 +135,9 @@ SPDBConstraint[name_] := Module[{loadedRule, spinValue, output},
     {If[EvenQ[spinValue],unitarityTProblem/.j->spinValue//.loadedRule, 0],
      If[EvenQ[spinValue],unitaritySProblem/.j->spinValue//.loadedRule, 0],
     (* unitarity A: spin\[GreaterEqual]1 and odd *)
-     If[(spinValue>=1)&&OddQ[spinValue],unitarityAProblem/.j->spinValue//.loadedRule, 0]}//Select[ArrayQ]
+     If[(spinValue>=1)&&OddQ[spinValue],unitarityAProblem/.j->spinValue//.loadedRule, 0],
+     If[(spinValue==0)&&config[["physics"]][["high_spin_constraints"]], {highSpin//.loadedRule}, 0]
+     }//Select[ArrayQ]
 ];
 ParallelMap[SPDBConstraint,names]//Flatten[#,1]& // convert
 
@@ -148,5 +150,6 @@ ParallelMap[SPDBConstraint,names]//Flatten[#,1]& // convert
 
 (* ::Subsubsection:: *)
 (*Run*)
+
 
 (*constructSDPProblem[3][6,2]*)
