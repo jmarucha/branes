@@ -61,7 +61,7 @@ If[problemType=="A0Bound_A1=-1",
 ];
 
 (* input *)
-AbsoluteTiming[setMatrices = constructSDPData2[valN][valMaxN, valMaxSpin]][[1]]//Print["Grid processed: ", #]&;
+AbsoluteTiming[setMatrices = constructSDPData[valN][valMaxN, valMaxSpin]][[1]]//Print["Grid processed: ", #]&;
 
 (* export to .m format *)
 Print[""];
@@ -76,48 +76,7 @@ Write[$Output,"| "<>FileNameJoin[{inputDir,nameUpper}]<>", "<>FileNameJoin[{inpu
 ]
 
 
-constructSDPData[valN_][valMaxN_, valMaxSpin_]:=Module[{count=0,names,fNum,loadedRule,spinValue,setMatrices1={},setMatrices2Zero={},setMatrices2={},setMatrices3={}},
-
-count//SetSharedVariable;
-setMatrices1//SetSharedVariable;
-setMatrices2//SetSharedVariable;
-setMatrices3//SetSharedVariable;
-
-(* sample points *)
-SetDirectory[gridDir];
-names=Table[FileNames["spin="<>ToString[spin]<>ToString["_*"]],{spin,0,valMaxSpin}]//Flatten;
-
-Write["stdout", "Problem type: "<>problemType<>". Parameters: N="<>ToString[valN]<>", maxN="<>ToString[valMaxN]<>", maxSpin="<>ToString[valMaxSpin]];
-Write["stdout", "Total number of sample points: "<>ToString[names//Length]];
-(*Write["stdout", "Sample points considered: "];*)
-
-(* loading sample points and substituting to unitarity constraints *)
-ParallelDo[    
-    loadedRule = names[[fNum]]//Get//Dispatch;
-    spinValue  = names[[fNum]]//selectSpin;
-    
-    (* unitarity T: spin\[GreaterEqual]0 and even *)
-    If[EvenQ[spinValue],AppendTo[setMatrices1,unitarityTProblem/.j->spinValue//.loadedRule];]; 
-    
-    (* unitarity S: spin\[GreaterEqual]0 and even *)
-    If[EvenQ[spinValue],AppendTo[setMatrices2,unitaritySProblem/.j->spinValue//.loadedRule]];
-      
-    (* unitarity A: spin\[GreaterEqual]1 and odd *)
-    If[(spinValue>=1)&&OddQ[spinValue],AppendTo[setMatrices3,unitarityAProblem/.j->spinValue//.loadedRule]];
-      
-(*    count++;*)
-(*    WriteString["stdout", ToString[count]<>", "];*)
-,{fNum,1,names//Length}];
-
-(* combining and converting the data *)
-setMatrices1~Join~setMatrices2~Join~setMatrices3//convert
-
-]
-
-
-
-
-constructSDPData2[valN_][valMaxN_, valMaxSpin_]:=Module[{count=0,names,fNum,problemMatrices,HSConstraints},
+constructSDPData[valN_][valMaxN_, valMaxSpin_]:=Module[{count=0,names,fNum,problemMatrices,HSConstraints},
 
 (* sample points *)
 SetDirectory[gridDir];
@@ -155,6 +114,9 @@ HSConstraints ~ Join ~ problemMatrices
 
 
 (*constructSDPProblem[3][6,2]*)
+
+
+
 
 
 
