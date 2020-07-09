@@ -37,7 +37,7 @@ for name in fileNames:
         sdpb_params = sdpb_params,
         sdpb = sdpb,
     )
-    sbatch_name = os.path.join(config['directories']['sdpb_binaries'], 'sbatch_' + name + '.run')
+    sbatch_name = os.path.join(config['directories']['sdpb_binaries'], 'run_' + name + '.sh')
     file = open(sbatch_name, "w") 
     file.write(text) 
     file.close() 

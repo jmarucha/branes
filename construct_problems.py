@@ -41,7 +41,7 @@ for problem in config['problem']:
                 max_N = problem['ansatz_size'],
                 max_spin = spin,
                 ) # in Wolfram Language
-        sbatch_name = 'math_N={}_maxN={}_maxSpin={}.sh'.format(
+        sbatch_name = 'construct_N={}_maxN={}_maxSpin={}.sh'.format(
             problem['N'],
             problem['ansatz_size'],
             spin,

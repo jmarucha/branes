@@ -4,7 +4,10 @@ __pycache__
 *.pyc
 
 data/
-sample_points/slurm*
+slurm*
 sample_points/data/
 output/
 problems/
+
+construct_*.sh
+run_*.sh
