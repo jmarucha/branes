@@ -1,6 +1,7 @@
 import toml
 import os
 import json
+import subprocess
 
 config = toml.load('config.toml')
 
@@ -24,6 +25,12 @@ def gen_header(directory, nodes_per_job = config['sdpb']['nodes_per_job']):
     config['cluster']['account'],
     "debug" if config['debug']['use_debug_partition'] else "parallel"
 )
+
+if config['cluster']['avoid_repeated_jobs']:
+    current_jobs = subprocess.run(['squeue', '-h', '-o', '%j', '-u', os.getlogin()], capture_output=True, encoding="ASCII").stdout.split('\n')
+
+def is_running(name):
+    return os.path.basename(name) in current_jobs
 
 if __name__ == "__main__":
     print(json.dumps(config))

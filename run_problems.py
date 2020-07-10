@@ -1,7 +1,7 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 import os  # os module allows to determine directories
 import subprocess
-from util import config, gen_header
+from util import config, gen_header, is_running
 
 sdpb_params = """\
 --procsPerNode={processes_per_node}
@@ -42,6 +42,10 @@ for name in fileNames:
         print("Output of {} exists, skipping.".format(name))
         continue 
     sbatch_name = os.path.join(config['directories']['sdpb_binaries'], 'run_' + name + '.sh')
+    if config['cluster']['avoid_repeated_jobs'] and is_running(sbatch_name):
+        print('Task {} already running, skipping.'.format(os.path.basename(sbatch_name)))
+        continue
+
     file = open(sbatch_name, "w") 
     file.write(text) 
     file.close() 
@@ -51,6 +55,7 @@ for name in fileNames:
         command = ['sbatch', sbatch_name, '--partition', 'debug']
     else:
         command = ['sbatch', sbatch_name]
+
 
     if not config['debug']['dry_run']:
         subprocess.call(command)

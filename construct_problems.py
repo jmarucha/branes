@@ -1,7 +1,7 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 import os  # os module allows to determine directories
 import subprocess
-from util import config, gen_header
+from util import config, gen_header, is_running
 
 # list is of the form [..., [valN, valMaxN, valMaxSpin], ...]
 mathematica_directory = config['directories']['mathematica']
@@ -47,6 +47,9 @@ for problem in config['problem']:
             spin,
         )
         sbatch_path = os.path.join(sdpb_input, sbatch_name)
+        if config['cluster']['avoid_repeated_jobs'] and is_running(sbatch_name):
+            print('Task {} already running, skipping.'.format(os.path.basename(sbatch_name)))
+            continue
         file = open(sbatch_path, "w") 
         file.write(job_template.format(
             header = gen_header(sdpb_input, nodes_per_job = 1),
