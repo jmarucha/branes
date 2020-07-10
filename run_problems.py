@@ -28,6 +28,7 @@ echo ending the job: `date`
 for name in fileNames:
     in_name     = name + '_in'
     out_name    = name +'_out'
+    out_full_dir = os.path.abspath(os.path.join(config['directories']['sdpb_output'],out_name))
     text       = job_template.format(
         header = gen_header(os.path.abspath(config['directories']['sdpb_binaries'])),
         nodes_per_job = config['sdpb']['nodes_per_job'],
@@ -37,6 +38,9 @@ for name in fileNames:
         sdpb_params = sdpb_params,
         sdpb = sdpb,
     )
+    if os.path.exists(os.path.join(out_full_dir, "out.txt")) and os.stat(os.path.join(out_full_dir, "out.txt")).st_size > 0:
+        print("Output of {} exists, skipping.".format(name))
+        continue 
     sbatch_name = os.path.join(config['directories']['sdpb_binaries'], 'run_' + name + '.sh')
     file = open(sbatch_name, "w") 
     file.write(text) 
