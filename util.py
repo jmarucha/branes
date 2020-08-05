@@ -26,7 +26,7 @@ def gen_header(directory, nodes_per_job = config['sdpb']['nodes_per_job']):
     "debug" if config['debug']['use_debug_partition'] else "parallel"
 )
 
-if config['cluster']['avoid_repeated_jobs']:
+if not __name__ != "__main__" and config['cluster']['avoid_repeated_jobs']:
     current_jobs = subprocess.run(['squeue', '-h', '-o', '%j', '-u', os.getlogin()], capture_output=True, encoding="ASCII").stdout.split('\n')
 
 def is_running(name):
