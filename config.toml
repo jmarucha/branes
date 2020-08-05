@@ -47,6 +47,7 @@ max_complementarity = 1e60
 [cluster]
 account = "fsl"
 avoid_repeated_jobs = true
+avoid_finished_jobs = true
 
 [debug]
 dry_run = true # don't run the jobs
