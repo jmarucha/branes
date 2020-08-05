@@ -37,7 +37,7 @@ def should_rerun(name):
     out_full_dir = os.path.abspath(os.path.join(config['directories']['sdpb_output'],name + '_out'))
     if os.path.exists(os.path.join(out_full_dir, "out.txt")) and os.stat(os.path.join(out_full_dir, "out.txt")).st_size > 0:
         with open(os.path.join(out_full_dir, 'out.txt')) as output:
-            terminate_reason = re.match('terminateReason = "(.+)";',output.readline())
+            terminate_reason = re.match('terminateReason = "(.+)";',output.readline())[1]
             if terminate_reason == "found primal-dual optimal solution":
                 print(f"Skipping, output of {name} exists, solution found")
                 return False
