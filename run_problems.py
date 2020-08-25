@@ -4,7 +4,7 @@ import subprocess
 from util import config, gen_header, is_running, should_rerun
 
 sdpb_params = """\
---procsPerNode={processes_per_node}
+--procsPerNode=28
 --writeSolution y
 --maxIterations {max_iterations}
 --maxComplementarity {max_complementarity}
@@ -20,7 +20,8 @@ job_template = """{header}
 #-------------------- actual job: start------------
 echo starting the job: `date`
 echo Tasks $SLURM_NTASKS
-srun {sdpb} -s {input} -o {output} {sdpb_params}
+echo $SLURM_NTASKS_PER_NODE
+srun -n $SLURM_NTASKS {sdpb} -s {input} -o {output} {sdpb_params}
 echo ending the job: `date`
 #-------------------- actual job: end------------
 """
@@ -39,10 +40,10 @@ for name in fileNames:
     )
     
     sbatch_name = os.path.join(config['directories']['sdpb_binaries'], 'run_' + name + '.sh')
-    if config['cluster']['avoid_finished_jobs'] and not should_rerun(name):
-        continue
     if config['cluster']['avoid_repeated_jobs'] and is_running(sbatch_name):
         print('Task {} already running, skipping.'.format(os.path.basename(sbatch_name)))
+        continue
+    if config['cluster']['avoid_finished_jobs'] and not should_rerun(name):
         continue
 
     file = open(sbatch_name, "w") 
