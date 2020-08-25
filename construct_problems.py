@@ -15,17 +15,12 @@ job_template = """{header}
 echo starting the job: `date`
 module load mathematica
 string=$(wolframscript -code '{code}')
-# select file names from the string (they are separated by |)
-IFS='|' read -r -a array <<< $string
-echo ${{array[0]}}
-string=${{array[1]}}
-IFS=', ' read -r -a array <<< $string
-input1=${{array[0]}}
-output1=${{input1:0:-2}}'_in'
-input2=${{array[1]}}
-output2=${{input2:0:-2}}'_in'
-{sdp2input} --precision={precision} --input=$input1 --output=$output1 &
-{sdp2input} --precision={precision} --input=$input2 --output=$output2 &
+
+echo ${{string}}
+
+
+{sdp2input} --precision={precision} --input=lowerA1Bound_A0=1_N=3_maxN={maxN}_maxSpin={maxL}.m --output=lowerA1Bound_A0=1_N=3_maxN={maxN}_maxSpin={maxL}_in &
+{sdp2input} --precision={precision} --input=upperA1Bound_A0=1_N=3_maxN={maxN}_maxSpin={maxL}.m --output=upperA1Bound_A0=1_N=3_maxN={maxN}_maxSpin={maxL}_in &
 wait
 echo ending the job: `date`
 #-------------------- actual job: end------------"""
@@ -55,7 +50,9 @@ for problem in config['problem']:
             header = gen_header(sdpb_input, nodes_per_job = 1),
             sdp2input = sdp2input,
             code = code,
-            precision = config['sdpb']['precision']
+            precision = config['sdpb']['precision'],
+            maxL = spin,
+            maxN = problem['ansatz_size'],
         )) 
         file.close() 
         subprocess.call(['chmod','+x', sbatch_path])
